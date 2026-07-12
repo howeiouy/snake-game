@@ -229,3 +229,76 @@ body {
     font-size: 1.2rem;
   }
 }
+
+/* Mobile Virtual Keyboard */
+.mobile-keyboard {
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left down right";
+  grid-template-columns: repeat(3, 72px);
+  grid-template-rows: repeat(2, 64px);
+  gap: 12px;
+  justify-content: center;
+  margin: 16px auto 0 auto;
+}
+
+.key-up { grid-area: up; }
+.key-left { grid-area: left; }
+.key-down { grid-area: down; }
+.key-right { grid-area: right; }
+
+.key-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.key-btn:active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-dim);
+  transform: scale(0.9);
+}
+
+.desktop-hint {
+  display: block;
+}
+
+.mobile-hint {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-hint {
+    display: none;
+  }
+  .mobile-hint {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-keyboard {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .mobile-keyboard {
+    grid-template-columns: repeat(3, 64px);
+    grid-template-rows: repeat(2, 56px);
+    gap: 10px;
+  }
+}
