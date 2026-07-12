@@ -109,7 +109,7 @@ function startGame() {
 function pauseGame() {
   if (state !== "playing") return;
   setState("paused");
-  showOverlay("已暂停", "按空格键或点击开始按钮继续", true);
+  showOverlay("已暂停", "点击屏幕或按空格/按钮继续", true);
   startBtn.textContent = "继续游戏";
 }
 
@@ -312,8 +312,104 @@ startBtn.addEventListener("click", () => {
 pauseBtn.addEventListener("click", pauseGame);
 restartBtn.addEventListener("click", startGame);
 
+// --- Mobile Support Controls ---
+
+const keyUp = document.getElementById("key-up");
+const keyDown = document.getElementById("key-down");
+const keyLeft = document.getElementById("key-left");
+const keyRight = document.getElementById("key-right");
+
+function bindMobileKey(btn, directionKey) {
+  const handler = (e) => {
+    e.preventDefault();
+    if (state === "playing") {
+      handleDirection(directionKey);
+    } else if (state === "idle" || state === "over") {
+      startGame();
+    } else if (state === "paused") {
+      resumeGame();
+    }
+  };
+  btn.addEventListener("touchstart", handler, { passive: false });
+  btn.addEventListener("mousedown", handler);
+}
+
+if (keyUp && keyDown && keyLeft && keyRight) {
+  bindMobileKey(keyUp, "ArrowUp");
+  bindMobileKey(keyDown, "ArrowDown");
+  bindMobileKey(keyLeft, "ArrowLeft");
+  bindMobileKey(keyRight, "ArrowRight");
+}
+
+// Swipe gestures on canvas
+let touchStartX = 0;
+let touchStartY = 0;
+const MIN_SWIPE_DISTANCE = 30;
+
+canvas.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 1) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+}, { passive: true });
+
+canvas.addEventListener("touchmove", (e) => {
+  if (state === "playing") {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+canvas.addEventListener("touchend", (e) => {
+  if (e.changedTouches.length === 1) {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+    
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (Math.abs(dx) > MIN_SWIPE_DISTANCE) {
+        if (dx > 0) handleDirection("ArrowRight");
+        else handleDirection("ArrowLeft");
+      }
+    } else {
+      if (Math.abs(dy) > MIN_SWIPE_DISTANCE) {
+        if (dy > 0) handleDirection("ArrowDown");
+        else handleDirection("ArrowUp");
+      }
+    }
+  }
+}, { passive: true });
+
+// Prevent zoom/scroll on mobile keyboard container
+const keysContainer = document.getElementById("mobile-keyboard");
+if (keysContainer) {
+  keysContainer.addEventListener("touchstart", (e) => {
+    if (e.target.tagName === "BUTTON") {
+      e.preventDefault();
+    }
+  }, { passive: false });
+}
+
+// Click/touch overlay to start or resume
+overlay.addEventListener("click", () => {
+  if (state === "idle" || state === "over") {
+    startGame();
+  } else if (state === "paused") {
+    resumeGame();
+  }
+});
+overlay.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  if (state === "idle" || state === "over") {
+    startGame();
+  } else if (state === "paused") {
+    resumeGame();
+  }
+}, { passive: false });
+
 highScore = loadHighScore();
 highScoreEl.textContent = String(highScore);
 setState("idle");
-showOverlay("准备开始", "按空格键或点击开始按钮", true);
+showOverlay("准备开始", "点击屏幕或按空格键开始", true);
 draw();
