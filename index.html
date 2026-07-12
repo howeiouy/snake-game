@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贪吃蛇</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <main class="container">
+    <header class="header">
+      <h1 class="title">贪吃蛇</h1>
+      <p class="subtitle">吃掉食物，不断变长，别撞墙也别咬到自己</p>
+    </header>
+
+    <section class="game-panel">
+      <div class="stats">
+        <div class="stat-card">
+          <span class="stat-label">得分</span>
+          <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">最高分</span>
+          <span class="stat-value" id="high-score">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">速度</span>
+          <span class="stat-value" id="speed-level">1</span>
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="game" width="480" height="480"></canvas>
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <h2 id="overlay-title">准备开始</h2>
+            <p id="overlay-message">按空格键或点击开始按钮</p>
+            <button class="btn btn-primary" id="start-btn">开始游戏</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary" id="pause-btn" disabled>暂停</button>
+        <button class="btn btn-secondary" id="restart-btn" disabled>重新开始</button>
+      </div>
+
+      <p class="hint">方向键 / WASD 控制移动 · 空格键 暂停/继续</p>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
